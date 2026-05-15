@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors - Clinical Blue/Green Theme -->
+    <color name="primary">#0288D1</color>
+    <color name="primary_dark">#01579B</color>
+    <color name="primary_light">#B3E5FC</color>
+    <color name="accent">#00BFA5</color>
+    
+    <!-- Background Colors -->
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="card_background">#FFFFFF</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    <color name="text_white">#FFFFFF</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- Price Colors -->
+    <color name="price_branded">#E53935</color>
+    <color name="price_generic">#43A047</color>
+    <color name="savings">#1B5E20</color>
+    
+    <!-- UI Elements -->
+    <color name="divider">#E0E0E0</color>
+    <color name="ripple">#20000000</color>
+    <color name="overlay">#80000000</color>
+    
+    <!-- Category Colors -->
+    <color name="category_analgesic">#E3F2FD</color>
+    <color name="category_antibiotic">#FFF3E0</color>
+    <color name="category_antacid">#F3E5F5</color>
+    <color name="category_diabetes">#E8F5E9</color>
+    <color name="category_cardiac">#FFEBEE</color>
+    <color name="category_respiratory">#E0F2F1</color>
+    
+    <!-- Map Colors -->
+    <color name="map_marker">#D32F2F</color>
+    <color name="map_user_location">#0288D1</color>
+    
+    <!-- Notification -->
+    <color name="notification_icon">#0288D1</color>
+    
+    <!-- Splash Screen -->
+    <color name="splash_background">#0288D1</color>
+    
+    <!-- Bottom Navigation -->
+    <color name="bottom_nav_selected">#0288D1</color>
+    <color name="bottom_nav_unselected">#9E9E9E</color>
+</resources>
