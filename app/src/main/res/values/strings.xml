@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Jan-Aushadhi Finder</string>
-    
+
     <!-- Bottom Navigation -->
     <string name="nav_search">Search</string>
     <string name="nav_stores">Stores</string>
     <string name="nav_reminders">Reminders</string>
     <string name="nav_favorites">Favorites</string>
     <string name="nav_ai_chat">AI Chat</string>
-    
+
     <!-- Medicine Search -->
     <string name="search_hint">Search medicine (e.g., Crocin, Dolo)</string>
     <string name="search_no_results">No medicines found</string>
@@ -19,7 +19,7 @@
     <string name="generic_name">Generic: %s</string>
     <string name="salt_composition">Salt: %s</string>
     <string name="category">Category: %s</string>
-    
+
     <!-- Store Locator -->
     <string name="stores_nearby">Nearby Jan-Aushadhi Kendras</string>
     <string name="distance">%s away</string>
@@ -29,7 +29,7 @@
     <string name="check_stock">Check Stock</string>
     <string name="no_stores_found">No stores found nearby</string>
     <string name="location_permission_required">Location permission required</string>
-    
+
     <!-- Reminders -->
     <string name="add_reminder">Add Reminder</string>
     <string name="medicine_name">Medicine Name</string>
@@ -46,7 +46,7 @@
     <string name="due_in">Due in %d days</string>
     <string name="due_today">Due today</string>
     <string name="overdue">Overdue</string>
-    
+
     <!-- AI Chat -->
     <string name="ai_chat">AI Assistant</string>
     <string name="ask_question">Ask about medicines…</string>
@@ -54,7 +54,7 @@
     <string name="send">Send</string>
     <string name="ai_thinking">Thinking…</string>
     <string name="ai_error">Unable to get response</string>
-    
+
     <!-- Medicine Detail -->
     <string name="uses">Uses</string>
     <string name="side_effects">Side Effects</string>
@@ -64,14 +64,14 @@
     <string name="add_to_favorites">Add to Favorites</string>
     <string name="remove_from_favorites">Remove from Favorites</string>
     <string name="set_reminder">Set Reminder</string>
-    
+
     <!-- Stock Request -->
     <string name="stock_request_sent">Stock request sent</string>
     <string name="stock_checking">Checking stock…</string>
     <string name="stock_available">In Stock</string>
     <string name="stock_limited">Limited Stock</string>
     <string name="stock_unavailable">Out of Stock</string>
-    
+
     <!-- General -->
     <string name="loading">Loading…</string>
     <string name="error">Error occurred</string>
@@ -80,15 +80,15 @@
     <string name="close">Close</string>
     <string name="share">Share</string>
     <string name="about">About</string>
-    
+
     <!-- Permissions -->
     <string name="permission_location_rationale">Location permission is needed to find nearby Jan-Aushadhi stores</string>
     <string name="permission_notification_rationale">Notification permission is needed for medicine refill reminders</string>
-    
+
     <!-- About -->
     <string name="about_app">Jan-Aushadhi Finder helps you find affordable generic medicines at government-subsidized Jan-Aushadhi Kendras. Save up to 90%% on your medical expenses!</string>
     <string name="version">Version 1.0</string>
-    
+
     <!-- Empty States -->
     <string name="no_favorites">No favorite medicines yet</string>
     <string name="add_favorites_hint">Tap the heart icon on any medicine to add it to favorites</string>
@@ -99,8 +99,8 @@
     <string name="medicine_reminders">Medicine Reminders</string>
     <string name="favorite_medicines">Favorite Medicines</string>
     <string name="price_comparison">Price Comparison</string>
-    <string name="branded_price">Branded Price</string>
-    <string name="generic_price">Generic Price</string>
+    <string name="branded_price_label">Branded Price</string>
+    <string name="generic_price_label">Generic Price</string>
     <string name="medicine_information">Medicine Information</string>
     <string name="delete_reminder">Delete Reminder</string>
 </resources>

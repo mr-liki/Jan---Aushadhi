@@ -4,6 +4,13 @@ plugins {
     id 'com.google.devtools.ksp'
 }
 
+// Read API keys from local.properties
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('app/local.properties')
+if (localPropertiesFile.exists()) {
+    localProperties.load(new FileInputStream(localPropertiesFile))
+}
+
 android {
     namespace 'com.janaushadhi.finder'
     compileSdk 34
@@ -17,12 +24,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // Add your Google Maps API Key here
         manifestPlaceholders = [
-            MAPS_API_KEY: "YOUR_GOOGLE_MAPS_API_KEY"
+                MAPS_API_KEY: localProperties.getProperty('MAPS_API_KEY', 'YOUR_GOOGLE_MAPS_API_KEY')
         ]
-        // Add your Gemini API Key here
-        buildConfigField "String", "GEMINI_API_KEY", '"YOUR_GEMINI_API_KEY"'
+        buildConfigField "String", "GEMINI_API_KEY", "\"${localProperties.getProperty('GEMINI_API_KEY', 'YOUR_GEMINI_API_KEY')}\""
     }
 
     buildTypes {

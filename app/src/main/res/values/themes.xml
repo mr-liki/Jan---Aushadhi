@@ -43,6 +43,9 @@
     </style>
 
     <!-- Text Styles -->
+    <style name="TextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+    </style>
+
     <style name="TextAppearance.Title" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textStyle">bold</item>
@@ -60,7 +63,12 @@
         <item name="android:textColor">@color/text_secondary</item>
     </style>
 
-    <!-- Price Text Styles -->
+    <!-- Price Text Styles — Parent MUST come first! -->
+    <style name="TextAppearance.Price" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TextAppearance.Price.Branded">
         <item name="android:textColor">@color/price_branded</item>
         <item name="android:textSize">16sp</item>

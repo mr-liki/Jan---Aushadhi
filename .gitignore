@@ -124,3 +124,6 @@ ENV/
 # API Keys (IMPORTANT - Never commit these!)
 # Make sure to add your API keys to local.properties or environment variables
 # DO NOT commit app/build.gradle with real API keys
+
+# API Keys
+app/local.properties

@@ -18,7 +18,7 @@
         android:fillColor="@color/white"
         android:pathData="M12,20h24v8h-24z" />
     
-    <!-- Small pill icon -->
+    <!-- Small pill icons -->
     <path
         android:fillColor="@color/primary_light"
         android:pathData="M32,14a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
