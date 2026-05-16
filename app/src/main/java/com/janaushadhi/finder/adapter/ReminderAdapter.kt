@@ -3,8 +3,8 @@ package com.janaushadhi.finder.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.Switch
+import android.widget.ImageView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -31,24 +31,24 @@ class ReminderAdapter(
 
     inner class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val medicineName: TextView = itemView.findViewById(R.id.tv_medicine_name)
-        private val genericName: TextView = itemView.findViewById(R.id.tv_generic_name)
+        private val dosage: TextView = itemView.findViewById(R.id.tv_dosage)
         private val refillDate: TextView = itemView.findViewById(R.id.tv_refill_date)
-        private val daysUntil: TextView = itemView.findViewById(R.id.tv_days_until)
-        private val activeSwitch: Switch = itemView.findViewById(R.id.switch_active)
-        private val deleteButton: ImageButton = itemView.findViewById(R.id.btn_delete)
+        private val daysUntil: TextView = itemView.findViewById(R.id.tv_days_until_refill)
+        private val activeSwitch: SwitchMaterial = itemView.findViewById(R.id.switch_active)
+        private val deleteButton: ImageView = itemView.findViewById(R.id.iv_delete)
 
         fun bind(reminder: Reminder) {
             medicineName.text = reminder.medicineName
-            genericName.text = reminder.genericName
+            dosage.text = reminder.dosage
 
             val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-            refillDate.text = dateFormat.format(Date(reminder.refillDate))
+            refillDate.text = "Refill on: ${dateFormat.format(Date(reminder.refillDate))}"
 
             val daysRemaining = ((reminder.refillDate - System.currentTimeMillis()) / (1000 * 60 * 60 * 24)).toInt()
             daysUntil.text = when {
                 daysRemaining < 0 -> "Overdue"
                 daysRemaining == 0 -> "Due today"
-                else -> "Due in $daysRemaining days"
+                else -> "$daysRemaining days remaining"
             }
 
             activeSwitch.isChecked = reminder.isActive

@@ -1,12 +1,12 @@
 package com.janaushadhi.finder.ui.medicine
 
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.janaushadhi.finder.R
 import com.janaushadhi.finder.data.database.AppDatabase
 import com.janaushadhi.finder.data.model.Medicine
@@ -28,11 +28,8 @@ class MedicineDetailActivity : AppCompatActivity() {
     private lateinit var category: TextView
     private lateinit var uses: TextView
     private lateinit var sideEffects: TextView
-    private lateinit var manufacturer: TextView
-    private lateinit var dosageForm: TextView
-    private lateinit var strength: TextView
     private lateinit var favoriteIcon: ImageView
-    private lateinit var btnSetReminder: Button
+    private lateinit var fabAddReminder: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,11 +58,8 @@ class MedicineDetailActivity : AppCompatActivity() {
         category = findViewById(R.id.tv_category)
         uses = findViewById(R.id.tv_uses)
         sideEffects = findViewById(R.id.tv_side_effects)
-        manufacturer = findViewById(R.id.tv_manufacturer)
-        dosageForm = findViewById(R.id.tv_dosage_form)
-        strength = findViewById(R.id.tv_strength)
         favoriteIcon = findViewById(R.id.iv_favorite)
-        btnSetReminder = findViewById(R.id.btn_set_reminder)
+        fabAddReminder = findViewById(R.id.fab_add_reminder)
     }
 
     private fun loadMedicine(id: Int) {
@@ -81,15 +75,12 @@ class MedicineDetailActivity : AppCompatActivity() {
         brandName.text = med.brandName
         genericName.text = "Generic: ${med.genericName}"
         saltComposition.text = "Salt: ${med.saltComposition}"
-        brandedPrice.text = "Branded: ${CurrencyUtils.formatPrice(med.brandedPrice)}"
-        genericPrice.text = "Generic: ${CurrencyUtils.formatPrice(med.genericPrice)}"
+        brandedPrice.text = CurrencyUtils.formatPrice(med.brandedPrice)
+        genericPrice.text = CurrencyUtils.formatPrice(med.genericPrice)
         savings.text = CurrencyUtils.formatSavings(med.brandedPrice, med.genericPrice)
-        category.text = "Category: ${med.category}"
+        category.text = med.category
         uses.text = med.uses.ifBlank { "Not specified" }
         sideEffects.text = med.sideEffects.ifBlank { "Consult your doctor" }
-        manufacturer.text = med.manufacturer.ifBlank { "Generic" }
-        dosageForm.text = med.dosageForm.ifBlank { "Various forms" }
-        strength.text = med.strength.ifBlank { "As prescribed" }
 
         favoriteIcon.setImageResource(
             if (med.isFavorite) R.drawable.ic_favorite_filled
@@ -103,7 +94,7 @@ class MedicineDetailActivity : AppCompatActivity() {
             }
         }
 
-        btnSetReminder.setOnClickListener {
+        fabAddReminder.setOnClickListener {
             Toast.makeText(this, "Reminder feature - Add to RemindersFragment", Toast.LENGTH_SHORT).show()
         }
     }

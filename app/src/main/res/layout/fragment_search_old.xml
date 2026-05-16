@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@color/background">
 
-    <!-- Search Input Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,26 +13,21 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/search_hint"
-            app:startIconDrawable="@android:drawable/ic_menu_search"
-            app:boxBackgroundMode="none">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:imeOptions="actionSearch"
-                android:maxLines="1" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:queryHint="@string/search_hint"
+            android:iconifiedByDefault="false"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:background="@color/surface"
+            app:queryBackground="@android:color/transparent"
+            app:submitBackground="@android:color/transparent" />
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Search Results Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,7 +53,6 @@
 
     </LinearLayout>
 
-    <!-- Results RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -68,7 +61,6 @@
         android:paddingHorizontal="16dp"
         android:clipToPadding="false" />
 
-    <!-- Empty State -->
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="match_parent"

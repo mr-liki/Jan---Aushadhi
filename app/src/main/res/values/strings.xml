@@ -15,7 +15,7 @@
     <string name="search_error">Search error. Please try again.</string>
     <string name="branded_price">Branded: %s</string>
     <string name="generic_price">Generic: %s</string>
-    <string name="you_save">You Save %s (%d%%)</string>
+    <string name="you_save" formatted="false">You Save %s (%d%%)</string>
     <string name="generic_name">Generic: %s</string>
     <string name="salt_composition">Salt: %s</string>
     <string name="category">Category: %s</string>

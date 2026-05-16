@@ -2,13 +2,13 @@ package com.janaushadhi.finder.ui.ai
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.janaushadhi.finder.R
 import com.janaushadhi.finder.ai.GeminiService
 import kotlinx.coroutines.launch
@@ -18,7 +18,7 @@ class AiChatActivity : AppCompatActivity() {
     private lateinit var geminiService: GeminiService
     private lateinit var recyclerView: RecyclerView
     private lateinit var inputField: EditText
-    private lateinit var sendButton: Button
+    private lateinit var sendButton: FloatingActionButton
     private lateinit var progressBar: ProgressBar
     private val messages = mutableListOf<ChatMessage>()
     private lateinit var adapter: ChatAdapter
@@ -33,9 +33,9 @@ class AiChatActivity : AppCompatActivity() {
         geminiService = GeminiService()
 
         recyclerView = findViewById(R.id.recycler_view)
-        inputField = findViewById(R.id.et_input)
-        sendButton = findViewById(R.id.btn_send)
-        progressBar = findViewById(R.id.progress_bar)
+        inputField = findViewById(R.id.et_message)
+        sendButton = findViewById(R.id.fab_send)
+        progressBar = ProgressBar(this) // Create programmatically since it's not in layout
 
         setupRecyclerView()
 

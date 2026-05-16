@@ -1,46 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
-    android:gravity="center">
+    android:background="@color/splash_background"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_app_logo"
+        android:layout_marginBottom="32dp" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
 
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/ic_notification"
-            android:layout_marginBottom="24dp"
-            android:tint="@color/white" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find Affordable Generic Medicines"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:alpha="0.9" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="32sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:indeterminate="true"
+        app:indicatorColor="@color/white"
+        xmlns:app="http://schemas.android.com/apk/res-auto" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Healthcare Savings Tool"
-            android:textSize="16sp"
-            android:textColor="@color/white"
-            android:alpha="0.8" />
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:indeterminateTint="@color/white" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
