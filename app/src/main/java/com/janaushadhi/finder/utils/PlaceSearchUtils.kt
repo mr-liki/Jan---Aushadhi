@@ -6,6 +6,7 @@ import android.location.Geocoder
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.io.IOException
 import java.util.Locale
 
@@ -40,11 +41,22 @@ object PlaceSearchUtils {
         try {
             if (!Geocoder.isPresent()) {
                 Log.w(TAG, "Geocoder not available on this device")
-                return@withContext results
+                // Return popular city matches as fallback
+                return@withContext getPopularCityMatches(query, maxResults)
             }
 
             val geocoder = Geocoder(context, Locale.getDefault())
-            val addresses = geocoder.getFromLocationName(query, maxResults)
+            
+            // Add timeout to prevent ANR
+            val addresses = try {
+                withTimeout(5000) { // 5 second timeout
+                    geocoder.getFromLocationName(query, maxResults)
+                }
+            } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+                Log.w(TAG, "Geocoding timeout for query: $query")
+                // Return popular city matches as fallback
+                return@withContext getPopularCityMatches(query, maxResults)
+            }
             
             addresses?.forEach { address ->
                 val placeName = getPlaceName(address)
@@ -64,8 +76,12 @@ object PlaceSearchUtils {
             
         } catch (e: IOException) {
             Log.e(TAG, "Geocoding failed for query: $query", e)
+            // Return popular city matches as fallback
+            return@withContext getPopularCityMatches(query, maxResults)
         } catch (e: Exception) {
             Log.e(TAG, "Unexpected error during place search", e)
+            // Return popular city matches as fallback
+            return@withContext getPopularCityMatches(query, maxResults)
         }
         
         return@withContext results
@@ -203,5 +219,54 @@ object PlaceSearchUtils {
         return getPopularCities().filter { city ->
             city.lowercase().contains(query.lowercase())
         }.take(5)
+    }
+
+    /**
+     * Get popular city matches as PlaceResult objects with predefined coordinates
+     */
+    private fun getPopularCityMatches(query: String, maxResults: Int): List<PlaceResult> {
+        val cityCoordinates = mapOf(
+            "Delhi" to Pair(28.6139, 77.2090),
+            "New Delhi" to Pair(28.6139, 77.2090),
+            "Mumbai" to Pair(19.0760, 72.8777),
+            "Bangalore" to Pair(12.9716, 77.5946),
+            "Chennai" to Pair(13.0827, 80.2707),
+            "Kolkata" to Pair(22.5726, 88.3639),
+            "Hyderabad" to Pair(17.3850, 78.4867),
+            "Pune" to Pair(18.5204, 73.8567),
+            "Ahmedabad" to Pair(23.0225, 72.5714),
+            "Jaipur" to Pair(26.9124, 75.7873),
+            "Surat" to Pair(21.1702, 72.8311),
+            "Lucknow" to Pair(26.8467, 80.9462),
+            "Kanpur" to Pair(26.4499, 80.3319),
+            "Nagpur" to Pair(21.1458, 79.0882),
+            "Indore" to Pair(22.7196, 75.8577),
+            "Bhopal" to Pair(23.2599, 77.4126),
+            "Visakhapatnam" to Pair(17.6868, 83.2185),
+            "Patna" to Pair(25.5941, 85.1376),
+            "Vadodara" to Pair(22.3072, 73.1812),
+            "Ludhiana" to Pair(30.9010, 75.8573),
+            "Agra" to Pair(27.1767, 78.0081),
+            "Nashik" to Pair(19.9975, 73.7898),
+            "Meerut" to Pair(28.9845, 77.7064),
+            "Rajkot" to Pair(22.3039, 70.8022),
+            "Varanasi" to Pair(25.3176, 82.9739),
+            "Srinagar" to Pair(34.0837, 74.7973),
+            "Aurangabad" to Pair(19.8762, 75.3433),
+            "Amritsar" to Pair(31.6340, 74.8723)
+        )
+
+        val matchingCities = cityCoordinates.filter { (city, _) ->
+            city.lowercase().contains(query.lowercase())
+        }.toList().take(maxResults)
+
+        return matchingCities.map { (city, coordinates) ->
+            PlaceResult(
+                name = city,
+                latitude = coordinates.first,
+                longitude = coordinates.second,
+                address = "$city, India"
+            )
+        }
     }
 }

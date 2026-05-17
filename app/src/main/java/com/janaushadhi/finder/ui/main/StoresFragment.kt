@@ -6,6 +6,7 @@ import android.location.Location
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -129,11 +130,15 @@ class StoresFragment : Fragment(), OnMapReadyCallback {
                 searchJob?.cancel()
                 
                 if (query.length >= 2) {
-                    // Debounce search by 300ms
+                    // Increase debounce time to 500ms to prevent ANR
                     searchJob = lifecycleScope.launch {
-                        delay(300)
-                        if (isActive) {
-                            viewModel.searchPlaces(query)
+                        delay(500)
+                        if (isActive && !query.isBlank()) {
+                            try {
+                                viewModel.searchPlaces(query)
+                            } catch (e: Exception) {
+                                Log.e("StoresFragment", "Search error", e)
+                            }
                         }
                     }
                 } else {
@@ -151,7 +156,12 @@ class StoresFragment : Fragment(), OnMapReadyCallback {
                 val query = etPlaceSearch.text?.toString()?.trim()
                 if (!query.isNullOrEmpty()) {
                     searchJob?.cancel()
-                    viewModel.searchPlaces(query)
+                    try {
+                        viewModel.searchPlaces(query)
+                    } catch (e: Exception) {
+                        Log.e("StoresFragment", "Search error", e)
+                        Toast.makeText(requireContext(), "Search failed. Please try again.", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 true
             } else {

@@ -1,6 +1,7 @@
 package com.janaushadhi.finder.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,8 @@ import com.janaushadhi.finder.data.database.AppDatabase
 import com.janaushadhi.finder.data.model.Store
 import com.janaushadhi.finder.data.repository.StoreRepository
 import com.janaushadhi.finder.utils.PlaceSearchUtils
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
@@ -34,6 +37,8 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _currentLocationName = MutableLiveData<String>()
     val currentLocationName: LiveData<String> = _currentLocationName
+
+    private var searchJob: Job? = null
 
     init {
         val database = AppDatabase.getDatabase(application)
@@ -88,22 +93,33 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
             return
         }
 
+        // Cancel any existing search job
+        searchJob?.cancel()
+        
         _isLoading.value = true
         _searchError.value = null
         
-        viewModelScope.launch {
+        searchJob = viewModelScope.launch {
             try {
                 val results = PlaceSearchUtils.searchPlaces(getApplication(), query, 5)
-                _searchResults.postValue(results)
                 
-                if (results.isEmpty()) {
-                    _searchError.postValue("No places found for '$query'")
+                if (isActive) { // Check if coroutine is still active
+                    _searchResults.postValue(results)
+                    
+                    if (results.isEmpty()) {
+                        _searchError.postValue("No places found for '$query'")
+                    }
                 }
             } catch (e: Exception) {
-                _searchError.postValue("Search failed. Please try again.")
-                _searchResults.postValue(emptyList())
+                if (isActive) {
+                    Log.e("StoreViewModel", "Search failed for query: $query", e)
+                    _searchError.postValue("Search failed. Please try again.")
+                    _searchResults.postValue(emptyList())
+                }
             } finally {
-                _isLoading.postValue(false)
+                if (isActive) {
+                    _isLoading.postValue(false)
+                }
             }
         }
     }
@@ -121,5 +137,10 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getPopularCitySuggestions(query: String): List<String> {
         return PlaceSearchUtils.filterPopularCities(query)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        searchJob?.cancel()
     }
 }
