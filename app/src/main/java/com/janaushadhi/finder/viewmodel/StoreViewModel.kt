@@ -12,6 +12,7 @@ import com.janaushadhi.finder.data.model.Store
 import com.janaushadhi.finder.data.repository.StoreRepository
 import com.janaushadhi.finder.utils.PlaceSearchUtils
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -48,17 +49,15 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setUserLocation(lat: Double, lng: Double) {
         _userLocation.value = Pair(lat, lng)
-        loadNearbyStores(lat, lng)
+        _currentLocationName.value = "Location Updated"
         
-        // Get address for current location (simplified)
+        // Delay store loading to prevent ANR during search
         viewModelScope.launch {
             try {
-                val address = PlaceSearchUtils.getAddressFromCoordinates(
-                    getApplication(), lat, lng
-                )
-                _currentLocationName.postValue(address ?: "Current Location")
+                kotlinx.coroutines.delay(1000) // Give UI time to settle
+                loadNearbyStores(lat, lng)
             } catch (e: Exception) {
-                _currentLocationName.postValue("Current Location")
+                Log.e("StoreViewModel", "Error loading stores", e)
             }
         }
     }
