@@ -6,7 +6,7 @@ plugins {
 
 // Read API keys from local.properties
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('app/local.properties')
+def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localProperties.load(new FileInputStream(localPropertiesFile))
 }

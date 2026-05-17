@@ -22,7 +22,7 @@ class GeminiService {
         return try {
             // Check if API key is configured
             if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" || BuildConfig.GEMINI_API_KEY.isBlank()) {
-                return "AI Assistant requires a Gemini API key to be configured. Please add your API key to local.properties file."
+                return getFallbackResponse(question)
             }
 
             val prompt = """
@@ -39,13 +39,13 @@ class GeminiService {
         } catch (e: Exception) {
             when {
                 e.message?.contains("API_KEY") == true -> 
-                    "Please configure your Gemini API key in the app settings."
+                    getFallbackResponse(question)
                 e.message?.contains("not found") == true -> 
-                    "AI service is temporarily unavailable. Please try again later."
+                    getFallbackResponse(question)
                 e.message?.contains("quota") == true -> 
                     "AI service quota exceeded. Please try again later."
                 else -> 
-                    "Sorry, I'm having trouble connecting to the AI service. Please check your internet connection and try again."
+                    getFallbackResponse(question)
             }
         }
     }
@@ -56,7 +56,7 @@ class GeminiService {
     suspend fun getBrandToGenericSuggestion(brandName: String): String {
         return try {
             if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" || BuildConfig.GEMINI_API_KEY.isBlank()) {
-                return "AI Assistant requires a Gemini API key to be configured."
+                return getFallbackBrandInfo(brandName)
             }
 
             val prompt = """
@@ -69,9 +69,9 @@ class GeminiService {
             """.trimIndent()
 
             val response = model.generateContent(prompt)
-            response.text ?: "No information found for $brandName"
+            response.text ?: getFallbackBrandInfo(brandName)
         } catch (e: Exception) {
-            "Unable to get information for $brandName. Please try again later."
+            getFallbackBrandInfo(brandName)
         }
     }
 
@@ -81,17 +81,7 @@ class GeminiService {
     suspend fun explainGenericVsBranded(): String {
         return try {
             if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" || BuildConfig.GEMINI_API_KEY.isBlank()) {
-                return """
-                    Generic medicines contain the same active ingredients as branded medicines but cost significantly less.
-                    
-                    Key differences:
-                    • Same effectiveness and safety
-                    • Lower cost (up to 90% savings)
-                    • Different packaging and name
-                    • Approved by drug authorities
-                    
-                    Jan-Aushadhi stores offer quality generic medicines at affordable prices.
-                """.trimIndent()
+                return getGenericVsBrandedExplanation()
             }
 
             val prompt = """
@@ -105,15 +95,156 @@ class GeminiService {
             """.trimIndent()
 
             val response = model.generateContent(prompt)
-            response.text ?: "Generic medicines contain the same active ingredients as branded medicines but cost less."
+            response.text ?: getGenericVsBrandedExplanation()
         } catch (e: Exception) {
-            """
-                Generic medicines are bioequivalent to branded medicines but sold at lower prices.
-                
-                They contain the same active ingredients and are equally effective, but don't include expensive branding and marketing costs.
-                
-                Jan-Aushadhi stores provide quality generic medicines approved by Indian drug authorities.
-            """.trimIndent()
+            getGenericVsBrandedExplanation()
         }
+    }
+
+    /**
+     * Provides fallback responses when AI service is unavailable
+     */
+    private fun getFallbackResponse(question: String): String {
+        val lowerQuestion = question.lowercase()
+        
+        return when {
+            lowerQuestion.contains("generic") || lowerQuestion.contains("branded") -> {
+                getGenericVsBrandedExplanation()
+            }
+            lowerQuestion.contains("paracetamol") || lowerQuestion.contains("crocin") -> {
+                """
+                Paracetamol is a common pain reliever and fever reducer.
+                
+                Generic names: Paracetamol, Acetaminophen
+                Common brands: Crocin, Dolo, Calpol
+                Uses: Fever, headache, body pain
+                
+                Generic paracetamol costs ₹5-7 vs branded ₹30-42.
+                
+                ⚠️ Always consult a doctor for proper medical advice.
+                """.trimIndent()
+            }
+            lowerQuestion.contains("ibuprofen") || lowerQuestion.contains("brufen") -> {
+                """
+                Ibuprofen is an anti-inflammatory pain reliever.
+                
+                Generic name: Ibuprofen
+                Common brands: Brufen, Combiflam
+                Uses: Pain, inflammation, fever
+                
+                Generic ibuprofen costs ₹8-10 vs branded ₹35-55.
+                
+                ⚠️ Always consult a doctor for proper medical advice.
+                """.trimIndent()
+            }
+            lowerQuestion.contains("store") || lowerQuestion.contains("jan-aushadhi") -> {
+                """
+                Jan-Aushadhi stores are government-supported pharmacies that sell quality generic medicines at affordable prices.
+                
+                Benefits:
+                • Up to 90% savings on medicines
+                • Same quality as branded medicines
+                • Available across India
+                • Approved by drug authorities
+                
+                Use the Stores tab to find nearby Jan-Aushadhi Kendras.
+                """.trimIndent()
+            }
+            lowerQuestion.contains("side effect") -> {
+                """
+                Common medicine side effects include:
+                
+                • Nausea or stomach upset
+                • Dizziness or drowsiness  
+                • Allergic reactions (rash, itching)
+                • Headache
+                
+                ⚠️ Important: Always read medicine labels and consult your doctor about potential side effects before taking any medication.
+                """.trimIndent()
+            }
+            else -> {
+                """
+                I'm here to help with medicine-related questions!
+                
+                You can ask me about:
+                • Generic vs branded medicines
+                • Common medicines like Paracetamol, Ibuprofen
+                • Jan-Aushadhi stores and savings
+                • Medicine side effects
+                • Dosage information
+                
+                ⚠️ Always consult a qualified doctor for medical advice.
+                """.trimIndent()
+            }
+        }
+    }
+
+    /**
+     * Provides fallback brand information
+     */
+    private fun getFallbackBrandInfo(brandName: String): String {
+        val lowerBrand = brandName.lowercase()
+        
+        return when {
+            lowerBrand.contains("crocin") || lowerBrand.contains("dolo") -> {
+                """
+                Brand: $brandName
+                Generic: Paracetamol
+                Uses: Fever, pain relief
+                Forms: Tablet, syrup
+                
+                Generic paracetamol available at Jan-Aushadhi stores for ₹5-7 vs branded ₹30-42.
+                """.trimIndent()
+            }
+            lowerBrand.contains("brufen") -> {
+                """
+                Brand: $brandName  
+                Generic: Ibuprofen
+                Uses: Pain, inflammation, fever
+                Forms: Tablet, suspension
+                
+                Generic ibuprofen available at Jan-Aushadhi stores for ₹8-10 vs branded ₹35-50.
+                """.trimIndent()
+            }
+            else -> {
+                """
+                For detailed information about $brandName, please:
+                
+                1. Search in the medicines database
+                2. Consult a pharmacist at Jan-Aushadhi store
+                3. Check with your doctor
+                
+                Generic alternatives are usually available at 50-90% lower cost.
+                """.trimIndent()
+            }
+        }
+    }
+
+    /**
+     * Provides generic vs branded explanation
+     */
+    private fun getGenericVsBrandedExplanation(): String {
+        return """
+            Generic vs Branded Medicines:
+            
+            🔹 Generic Medicines:
+            • Same active ingredients as branded
+            • Same effectiveness and safety
+            • 50-90% cheaper
+            • Plain packaging
+            
+            🔹 Branded Medicines:
+            • Higher cost due to marketing
+            • Fancy packaging
+            • Same therapeutic effect
+            
+            💡 Why choose generic?
+            • Approved by drug authorities
+            • Quality assured
+            • Huge cost savings
+            • Available at Jan-Aushadhi stores
+            
+            ⚠️ Always consult your doctor before switching medicines.
+        """.trimIndent()
     }
 }
