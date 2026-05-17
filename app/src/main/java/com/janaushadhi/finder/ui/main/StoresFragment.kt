@@ -130,9 +130,9 @@ class StoresFragment : Fragment(), OnMapReadyCallback {
                 searchJob?.cancel()
                 
                 if (query.length >= 2) {
-                    // Increase debounce time to 500ms to prevent ANR
+                    // Reduced debounce time since we're not using blocking I/O
                     searchJob = lifecycleScope.launch {
-                        delay(500)
+                        delay(200) // Reduced from 500ms to 200ms
                         if (isActive && !query.isBlank()) {
                             try {
                                 viewModel.searchPlaces(query)

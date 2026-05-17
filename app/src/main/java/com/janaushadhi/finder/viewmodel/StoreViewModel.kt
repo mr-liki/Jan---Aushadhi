@@ -50,12 +50,16 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
         _userLocation.value = Pair(lat, lng)
         loadNearbyStores(lat, lng)
         
-        // Get address for current location
+        // Get address for current location (simplified)
         viewModelScope.launch {
-            val address = PlaceSearchUtils.getAddressFromCoordinates(
-                getApplication(), lat, lng
-            )
-            _currentLocationName.postValue(address ?: "Current Location")
+            try {
+                val address = PlaceSearchUtils.getAddressFromCoordinates(
+                    getApplication(), lat, lng
+                )
+                _currentLocationName.postValue(address ?: "Current Location")
+            } catch (e: Exception) {
+                _currentLocationName.postValue("Current Location")
+            }
         }
     }
 
