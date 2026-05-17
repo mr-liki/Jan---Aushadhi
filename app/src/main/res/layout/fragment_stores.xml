@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
@@ -9,12 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Search Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_gravity="top"
-        android:elevation="8dp">
+        android:elevation="8dp"
+        app:cardCornerRadius="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,6 +33,41 @@
                 android:textStyle="bold"
                 android:textColor="@color/on_surface" />
 
+            <!-- Place Search Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="@string/search_places_hint"
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:endIconMode="clear_text"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_place_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
+                    android:maxLines="1" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Search Results RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_search_results"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:maxHeight="200dp"
+                android:visibility="gone"
+                android:background="@color/surface"
+                android:elevation="4dp" />
+
             <TextView
                 android:id="@+id/tv_location_status"
                 android:layout_width="wrap_content"
@@ -37,12 +75,13 @@
                 android:text="@string/getting_location"
                 android:textSize="14sp"
                 android:textColor="@color/on_surface_variant"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- My Location FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_my_location"
         android:layout_width="wrap_content"
@@ -50,6 +89,17 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_menu_mylocation"
-        android:contentDescription="@string/my_location" />
+        android:contentDescription="@string/my_location"
+        app:backgroundTint="@color/primary"
+        app:tint="@color/white" />
+
+    <!-- Search Progress Indicator -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:indicatorColor="@color/primary" />
 
 </FrameLayout>

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.janaushadhi.finder.data.database.AppDatabase
 import com.janaushadhi.finder.data.model.Store
 import com.janaushadhi.finder.data.repository.StoreRepository
+import com.janaushadhi.finder.utils.PlaceSearchUtils
 import kotlinx.coroutines.launch
 
 class StoreViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,6 +26,15 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     private val _userLocation = MutableLiveData<Pair<Double, Double>>()
     val userLocation: LiveData<Pair<Double, Double>> = _userLocation
 
+    private val _searchResults = MutableLiveData<List<PlaceSearchUtils.PlaceResult>>()
+    val searchResults: LiveData<List<PlaceSearchUtils.PlaceResult>> = _searchResults
+
+    private val _searchError = MutableLiveData<String?>()
+    val searchError: LiveData<String?> = _searchError
+
+    private val _currentLocationName = MutableLiveData<String>()
+    val currentLocationName: LiveData<String> = _currentLocationName
+
     init {
         val database = AppDatabase.getDatabase(application)
         repository = StoreRepository(database.storeDao())
@@ -34,6 +44,14 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
     fun setUserLocation(lat: Double, lng: Double) {
         _userLocation.value = Pair(lat, lng)
         loadNearbyStores(lat, lng)
+        
+        // Get address for current location
+        viewModelScope.launch {
+            val address = PlaceSearchUtils.getAddressFromCoordinates(
+                getApplication(), lat, lng
+            )
+            _currentLocationName.postValue(address ?: "Current Location")
+        }
     }
 
     fun loadNearbyStores(lat: Double, lng: Double, radiusKm: Double = 10.0) {
@@ -62,5 +80,46 @@ class StoreViewModel(application: Application) : AndroidViewModel(application) {
                 _isLoading.postValue(false)
             }
         }
+    }
+
+    fun searchPlaces(query: String) {
+        if (query.length < 2) {
+            _searchResults.value = emptyList()
+            return
+        }
+
+        _isLoading.value = true
+        _searchError.value = null
+        
+        viewModelScope.launch {
+            try {
+                val results = PlaceSearchUtils.searchPlaces(getApplication(), query, 5)
+                _searchResults.postValue(results)
+                
+                if (results.isEmpty()) {
+                    _searchError.postValue("No places found for '$query'")
+                }
+            } catch (e: Exception) {
+                _searchError.postValue("Search failed. Please try again.")
+                _searchResults.postValue(emptyList())
+            } finally {
+                _isLoading.postValue(false)
+            }
+        }
+    }
+
+    fun selectPlace(place: PlaceSearchUtils.PlaceResult) {
+        setUserLocation(place.latitude, place.longitude)
+        _currentLocationName.value = place.name
+        _searchResults.value = emptyList() // Clear search results
+    }
+
+    fun clearSearchResults() {
+        _searchResults.value = emptyList()
+        _searchError.value = null
+    }
+
+    fun getPopularCitySuggestions(query: String): List<String> {
+        return PlaceSearchUtils.filterPopularCities(query)
     }
 }

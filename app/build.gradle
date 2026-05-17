@@ -78,9 +78,10 @@ dependencies {
     // WorkManager for reminders
     implementation 'androidx.work:work-runtime-ktx:2.9.0'
 
-    // Google Maps
+    // Google Maps & Places
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-location:21.1.0'
+    implementation 'com.google.android.libraries.places:places:3.3.0'
 
     // Gemini AI
     implementation 'com.google.ai.client.generativeai:generativeai:0.2.2'

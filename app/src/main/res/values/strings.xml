@@ -29,6 +29,11 @@
     <string name="check_stock">Check Stock</string>
     <string name="no_stores_found">No stores found nearby</string>
     <string name="location_permission_required">Location permission required</string>
+    <string name="search_places_hint">Search places (e.g., Delhi, Mumbai, Bangalore)</string>
+    <string name="place_search_error">Unable to search places. Please try again.</string>
+    <string name="place_not_found">Place not found. Please try a different search.</string>
+    <string name="searching_places">Searching places…</string>
+    <string name="location_updated">Location updated to %s</string>
 
     <!-- Reminders -->
     <string name="add_reminder">Add Reminder</string>

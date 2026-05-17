@@ -11,7 +11,7 @@ import com.janaushadhi.finder.BuildConfig
 class GeminiService {
 
     private val model = GenerativeModel(
-        modelName = "gemini-pro",
+        modelName = "gemini-1.5-flash",
         apiKey = BuildConfig.GEMINI_API_KEY
     )
 
@@ -20,6 +20,11 @@ class GeminiService {
      */
     suspend fun askMedicineQuestion(question: String): String {
         return try {
+            // Check if API key is configured
+            if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" || BuildConfig.GEMINI_API_KEY.isBlank()) {
+                return "AI Assistant requires a Gemini API key to be configured. Please add your API key to local.properties file."
+            }
+
             val prompt = """
                 You are a helpful medical information assistant for Jan-Aushadhi Finder app.
                 Answer questions about generic medicines, their uses, and Jan-Aushadhi stores.
@@ -32,7 +37,16 @@ class GeminiService {
             val response = model.generateContent(prompt)
             response.text ?: "I couldn't generate a response. Please try again."
         } catch (e: Exception) {
-            "Error: ${e.message ?: "Unable to connect to AI service"}"
+            when {
+                e.message?.contains("API_KEY") == true -> 
+                    "Please configure your Gemini API key in the app settings."
+                e.message?.contains("not found") == true -> 
+                    "AI service is temporarily unavailable. Please try again later."
+                e.message?.contains("quota") == true -> 
+                    "AI service quota exceeded. Please try again later."
+                else -> 
+                    "Sorry, I'm having trouble connecting to the AI service. Please check your internet connection and try again."
+            }
         }
     }
 
@@ -41,6 +55,10 @@ class GeminiService {
      */
     suspend fun getBrandToGenericSuggestion(brandName: String): String {
         return try {
+            if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" || BuildConfig.GEMINI_API_KEY.isBlank()) {
+                return "AI Assistant requires a Gemini API key to be configured."
+            }
+
             val prompt = """
                 Given the branded medicine name "$brandName", provide:
                 1. The generic/salt name
@@ -53,7 +71,7 @@ class GeminiService {
             val response = model.generateContent(prompt)
             response.text ?: "No information found for $brandName"
         } catch (e: Exception) {
-            "Error: ${e.message}"
+            "Unable to get information for $brandName. Please try again later."
         }
     }
 
@@ -62,6 +80,20 @@ class GeminiService {
      */
     suspend fun explainGenericVsBranded(): String {
         return try {
+            if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY" || BuildConfig.GEMINI_API_KEY.isBlank()) {
+                return """
+                    Generic medicines contain the same active ingredients as branded medicines but cost significantly less.
+                    
+                    Key differences:
+                    • Same effectiveness and safety
+                    • Lower cost (up to 90% savings)
+                    • Different packaging and name
+                    • Approved by drug authorities
+                    
+                    Jan-Aushadhi stores offer quality generic medicines at affordable prices.
+                """.trimIndent()
+            }
+
             val prompt = """
                 Explain in simple terms:
                 1. What are generic medicines?
@@ -75,7 +107,13 @@ class GeminiService {
             val response = model.generateContent(prompt)
             response.text ?: "Generic medicines contain the same active ingredients as branded medicines but cost less."
         } catch (e: Exception) {
-            "Generic medicines are bioequivalent to branded medicines but sold at lower prices because they don't include branding costs."
+            """
+                Generic medicines are bioequivalent to branded medicines but sold at lower prices.
+                
+                They contain the same active ingredients and are equally effective, but don't include expensive branding and marketing costs.
+                
+                Jan-Aushadhi stores provide quality generic medicines approved by Indian drug authorities.
+            """.trimIndent()
         }
     }
 }
